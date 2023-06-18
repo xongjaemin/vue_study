@@ -1,29 +1,31 @@
 <template>
-  <div class="black-bg" v-if="showModal">
-    <div class="white-bg">
-      <h4>{{ products[selectedIdx].title }}</h4>
-      <img :src="products[selectedIdx].image" />
-      <p>{{ products[selectedIdx].content }}</p>
-      <button @click="showModal = false">닫기</button>
-    </div>
-  </div>
+  <!-- 상세조회 모달 -->
+  <DetailModal
+    :products="products"
+    :selectedIdx="selectedIdx"
+    :showModal="showModal"
+    @closeModal="showModal = false"
+  />
   <div class="menu">
     <a v-for="menu in menuList" :key="menu">{{ menu }}</a>
   </div>
 
   <DiscountBanner />
 
-  <div v-for="(product, i) in products" :key="i" @click="setShowModal(i)">
-    <img :src="product.image" class="image" @click="showModal = true" />
-    <h4>{{ product.title }}</h4>
-    <p>{{ product.price }} 만원</p>
-    <button @click="increase(i)">허위매물신고</button>
-    <span>신고수: {{ product.report }}</span>
-  </div>
+  <!-- 상품 리스트 -->
+  <ProductList
+    v-for="(product, i) in products"
+    :key="i"
+    @setShowModal="setShowModal($event)"
+    @increaseReport="increase(i)"
+    :product="product"
+  />
 </template>
 
 <script>
 import DiscountBanner from "./components/DiscountBanner.vue";
+import DetailModal from "./components/DetailModal.vue";
+import ProductList from "./components/ProductList.vue";
 import room from "./data/room.js";
 
 export default {
@@ -44,7 +46,7 @@ export default {
       this.showModal = true;
     },
   },
-  components: { DiscountBanner },
+  components: { DiscountBanner, DetailModal, ProductList },
 };
 </script>
 
