@@ -1,46 +1,50 @@
 <template>
-  <div class="black-bg" v-if="showModal" @click="showModal = false">
+  <div class="black-bg" v-if="showModal">
     <div class="white-bg">
-      <h4>상세페이지</h4>
-      <p>상세페이지 내용</p>
+      <h4>{{ products[selectedIdx].title }}</h4>
+      <img :src="products[selectedIdx].image" />
+      <p>{{ products[selectedIdx].content }}</p>
+      <button @click="showModal = false">닫기</button>
     </div>
   </div>
   <div class="menu">
     <a v-for="menu in menuList" :key="menu">{{ menu }}</a>
   </div>
 
-  <div>
-    <img src="./assets/jamie.png" class="image" @click="showModal = true" />
-  </div>
-  <div v-for="(product, i) in products" :key="i">
-    <h4>{{ product }}</h4>
-    <p>{{ price[i] }} 만원</p>
+  <DiscountBanner />
+
+  <div v-for="(product, i) in products" :key="i" @click="setShowModal(i)">
+    <img :src="product.image" class="image" @click="showModal = true" />
+    <h4>{{ product.title }}</h4>
+    <p>{{ product.price }} 만원</p>
     <button @click="increase(i)">허위매물신고</button>
-    <span>신고수: {{ report[i] }}</span>
+    <span>신고수: {{ product.report }}</span>
   </div>
 </template>
 
 <script>
+import DiscountBanner from "./components/DiscountBanner.vue";
 import room from "./data/room.js";
-room;
 
 export default {
   name: "App",
   data() {
     return {
-      price: [60, 30, 20],
-      products: ["역삼동원룸", "천호동원룸", "마포구원룸"],
-      menuList: ["Home", "Products", "ETC"],
-      report: [0, 0, 0],
+      products: room,
       showModal: false,
+      selectedIdx: 0,
     };
   },
   methods: {
     increase(i) {
-      this.report[i]++;
+      this.products[i].report++;
+    },
+    setShowModal(i) {
+      this.selectedIdx = i;
+      this.showModal = true;
     },
   },
-  components: {},
+  components: { DiscountBanner },
 };
 </script>
 
@@ -62,6 +66,13 @@ div {
   padding: 10px;
   cursor: pointer;
 }
+.discount {
+  background: #eee;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
 .image {
   width: 350px;
   height: auto;
