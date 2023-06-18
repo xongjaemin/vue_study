@@ -10,7 +10,7 @@
     <a v-for="menu in menuList" :key="menu">{{ menu }}</a>
   </div>
 
-  <DiscountBanner />
+  <DiscountBanner v-if="showDiscount" :discount="discount" />
 
   <!-- 상품 리스트 -->
   <ProductList
@@ -35,6 +35,8 @@ export default {
       products: room,
       showModal: false,
       selectedIdx: 0,
+      discount: 30,
+      showDiscount: true,
     };
   },
   methods: {
@@ -46,6 +48,13 @@ export default {
       this.showModal = true;
     },
   },
+
+  mounted() {
+    setInterval(() => {
+      this.discount -= 1;
+    }, 1000);
+  },
+
   components: { DiscountBanner, DetailModal, ProductList },
 };
 </script>
